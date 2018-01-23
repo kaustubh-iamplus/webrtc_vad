@@ -1,3 +1,8 @@
+This project can be used to create a standalone library from WebRTC's VAD engine (independent from the rest of the WebRTC code).
+Corresponding Go bindings are also generated using c-for-go(https://github.com/xlab/c-for-go) based on webrtc.yml file.
+
+----------------------------------------------------------------------------------
+
 To build library and corresponding Go bindings for WebRTC's voice activity detection (VAD) module:
 
 1) Git clone WebRTC source locally (https://webrtc.googlesource.com/src)
@@ -18,3 +23,4 @@ Dependecies:
  - cmake (>= v3.5)
  - make
  - c-for-go
+
