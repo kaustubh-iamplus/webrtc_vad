@@ -11,3 +11,10 @@ To build library and corresponding Go bindings for WebRTC's voice activity detec
 3) While building Go program pass CGO_LDPATHS environment variable
      $ CGO_LDFLAGS="-L/tmp -lwebrtc_vad" LD_LIBRARY_PATH=/tmp go run server.go
      libwebrtc_vad.so is present at /tmp
+
+----------------------------------------------------------------------------------
+
+Dependecies:
+ - cmake (>= v3.5)
+ - make
+ - c-for-go
