@@ -1,0 +1,13 @@
+To build library and corresponding Go bindings for WebRTC's voice activity detection (VAD) module:
+
+1) Git clone WebRTC source locally (https://webrtc.googlesource.com/src)
+
+2) Execute script.sh
+     Usage (Please use full paths):
+     $ ./script.sh <WEBRTC_SRC_PATH> <DEST_DIR_PATH>
+     WEBRTC_SRC_PATH = WebRTC source directory path
+     DEST_DIR_PATH = Output directory path
+
+3) While building Go program pass CGO_LDPATHS environment variable
+     $ CGO_LDFLAGS="-L/tmp -lwebrtc_vad" LD_LIBRARY_PATH=/tmp go run server.go
+     libwebrtc_vad.so is present at /tmp
