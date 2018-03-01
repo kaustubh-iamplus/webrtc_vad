@@ -3,9 +3,10 @@
 usage() 
 {
   echo "Usage (Please use full paths):"
-  echo "  ./script.sh <WEBRTC_SRC_PATH> <DEST_DIR_PATH>"
+  echo "  ./script.sh <WEBRTC_SRC_PATH> <DEST_DIR_PATH> <COMPILE_GO_BINDINGS>"
   echo "WEBRTC_SRC_PATH = WebRTC source directory path"
   echo "DEST_DIR_PATH = Output directory path"
+  echo "COMPILE_GO_BINDINGS = Set to compile Go bindinds"
   echo ""
   echo ""
 }
@@ -14,6 +15,8 @@ usage
 
 WEBRTC_SRC_PATH="$1"
 DEST_DIR="$2"
+COMPILE_GO_BINDINGS="$3"
+
 # https://stackoverflow.com/a/31285400
 STDDEF_PATH=`echo '#include<stddef.h>' | gcc -E - | grep stddef.h | head -n1 | sed 's/.*"\(.*\)".*/\1/' | sed 's/\/stddef.h//'`
 
@@ -67,16 +70,20 @@ make install
 echo "Making library done..."
 echo ""
 
-# https://stackoverflow.com/a/9366940
-sed -i "8s@_0_@\"$STDDEF_PATH\"@" "$DEST_DIR/webrtc.yml"
-sed -i "8s@_1_@\"$DEST_DIR/webrtc\"@" "$DEST_DIR/webrtc.yml"
+if [ -z "$COMPILE_GO_BINDINGS" ]; then
+    echo "Not compiling Go bindings..."
+else
+    # https://stackoverflow.com/a/9366940
+    sed -i "8s@_0_@\"$STDDEF_PATH\"@" "$DEST_DIR/webrtc.yml"
+    sed -i "8s@_1_@\"$DEST_DIR/webrtc\"@" "$DEST_DIR/webrtc.yml"
 
-echo "Generating Go bindings..."
-cd "$DEST_DIR"
-c-for-go -out "$DEST_DIR/go" webrtc.yml
+    echo "Generating Go bindings..."
+    cd "$DEST_DIR"
+    c-for-go -out "$DEST_DIR/go" webrtc.yml
 
-cp "$WEBRTC_SRC_PATH/common_audio/vad/include/webrtc_vad.h" "$DEST_DIR/go/vad/"
-cp "$WEBRTC_SRC_PATH/typedefs.h" "$DEST_DIR/go/vad/"
+    cp "$WEBRTC_SRC_PATH/common_audio/vad/include/webrtc_vad.h" "$DEST_DIR/go/vad/"
+    cp "$WEBRTC_SRC_PATH/typedefs.h" "$DEST_DIR/go/vad/"
+fi
 
 rm -rf "$DEST_DIR/webrtc"
 rm -rf "$DEST_DIR/webrtc.yml"
